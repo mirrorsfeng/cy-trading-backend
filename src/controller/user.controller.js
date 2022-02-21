@@ -1,28 +1,13 @@
+const jwt = require('jsonwebtoken');
 const { createUser, searchUserInfo } = require('../service/user.service');
+const { userRegisterError } = require('../constants/err.type');
 
+const { JWT_SECRET } = require('../config/config.default');
 class UserController {
     async register(ctx, next) {
         const { user_name, passWord } = JSON.parse(ctx.request.body);
-        if(!user_name || !passWord) {
-            console.error('用户名或密码为空', ctx.request.body);
-            ctx.status = 400;
-            ctx.body = {
-                code: '10001',
-                message: '用户名或密码为空',
-                result: ''
-            }
-            return;
-        }
 
-        const isRepeat = await searchUserInfo(user_name);
-        if(isRepeat){
-            ctx.body = {
-                code: '10002',
-                message: '用户名重复',
-                result: ''
-            }
-            return;
-        }else {
+        try{
             const res = await createUser(user_name, passWord);
             ctx.body = {
                 code: 0,
@@ -33,13 +18,30 @@ class UserController {
                 }
             }
             return;
+        }catch(err) {
+            console.log(err);
+            ctx.app.emit('error', userRegisterError, ctx);
         }
+           
         
         
     }
 
     async login(ctx, next) {
-        ctx.body = 'login';
+        const {user_name} = JSON.parse(ctx.request.body);
+        try {
+            const {passWord, ...res} = await searchUserInfo(user_name);
+
+            ctx.body = {
+                code: 0,
+                message: '用户登陆成功',
+                result: {
+                    token: jwt.sign(res, JWT_SECRET, {expiresIn: '1d'}),
+                }
+            }
+        } catch (error) {
+            console.error('用户登陆失败:' + error);
+        }
     }
 }
 

@@ -6,9 +6,9 @@ class UserService {
     }
 
     async searchUserInfo(user_name) {
-     const res = await User.findOne({where: { user_name : user_name}})
+     const res = await User.findOne({where: { user_name : user_name}});
      if(res) {
-         return 1 // 用户已存在
+         return res.dataValues // 用户已存在
      }else {
          return 0 // 用户不存在
      }

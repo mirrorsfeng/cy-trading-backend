@@ -10,7 +10,7 @@ const User = seq.define('cy_User', {
         comment: '用户名',
     },
     passWord: {
-        type: DataTypes.CHAR(20),
+        type: DataTypes.STRING,
         allowNull: false,
         comment: '密码',
     },
