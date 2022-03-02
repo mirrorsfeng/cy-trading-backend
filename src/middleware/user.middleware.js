@@ -9,7 +9,7 @@ const { userFormateError,
      } = require('../constants/err.type');
 
 const userValidator = async (ctx, next) => {
-    const { user_name, passWord } = JSON.parse(ctx.request.body);
+    const { user_name, passWord } = ctx.request.body;
     if(!user_name || !passWord) {
         console.error('用户名或密码为空', ctx.request.body);
         ctx.app.emit('error',userFormateError, ctx);
@@ -19,7 +19,7 @@ const userValidator = async (ctx, next) => {
 }
 
 const verifyUser = async (ctx, next) => {
-    const { user_name } = JSON.parse(ctx.request.body);
+    const { user_name } = ctx.request.body;
     try{
         const isRepeat = await searchUserInfo(user_name);
         if(isRepeat){
@@ -37,18 +37,18 @@ const verifyUser = async (ctx, next) => {
 }
 
 const cryptPassword = async (ctx,next) => {
-    const body =  JSON.parse(ctx.request.body);
+    const body =  ctx.request.body;
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(body.passWord, salt);
     body.passWord = hash;
 
-    ctx.request.body = JSON.stringify(body);
+    ctx.request.body = body;
 
     await next();
 }
 
 const verifyLogin = async (ctx,next) => {
-    const { user_name, passWord } = JSON.parse(ctx.request.body);
+    const { user_name, passWord } = ctx.request.body;
 
     try {
         const res = await searchUserInfo(user_name);

@@ -13,6 +13,13 @@ class UserService {
          return 0 // 用户不存在
      }
     }
+
+    async updateByID(id, passWord) {
+        const whereOpt = { id };
+        const res = await User.update({ passWord }, {where : whereOpt});
+       
+        return res[0]>0? true : false;
+    }
 }
 
 module.exports = new UserService();

@@ -44,7 +44,7 @@ const sendMail = async (mail, code, call) => {
 
 class sendEmailController { 
     async sendEmail(ctx, next) {
-    const { email } = JSON.parse(ctx.request.body);
+    const { email } = ctx.request.body;
     if(!email) {
         console.error('邮箱为空');
         ctx.app.emit('error', emailError, ctx);
