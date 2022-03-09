@@ -1,18 +1,43 @@
 const bcrypt = require('bcryptjs');
 const { searchUserInfo } = require('../service/user.service');
+const { findCode } = require('../service/emailCode.service');
 const { userFormateError,
         userAlreadyExited, 
         userRegisterError, 
         userNotExist, 
         userLoginError,
-        userPasswordError
+        userPasswordError,
+        emailCodeError,
+        emailCodeNotExist,
      } = require('../constants/err.type');
 
 const userValidator = async (ctx, next) => {
     const { user_name, passWord } = ctx.request.body;
     if(!user_name || !passWord) {
-        console.error('用户名或密码为空', ctx.request.body);
+        console.error('用户名或密码为空或邮箱', ctx.request.body);
         ctx.app.emit('error',userFormateError, ctx);
+        return;
+    }
+    await next();
+}
+
+const registerValidator = async (ctx, next) => {
+    const { user_name, passWord, email, code } = ctx.request.body;
+    if(!user_name || !passWord || !email || !code) {
+        console.error('用户名或密码为空或邮箱', ctx.request.body);
+        ctx.app.emit('error',userFormateError, ctx);
+        return;
+    }
+    try {
+        const codeRes = await findCode(email);
+        if(code != codeRes.code) {
+            console.error("验证码错误")
+            ctx.app.emit('error', emailCodeError, ctx);
+            return;
+        }
+    } catch (err) {
+        console.error('该邮箱没有获取验证码');
+        ctx.app.emit('error', emailCodeNotExist, ctx);
         return;
     }
     await next();
@@ -76,5 +101,6 @@ module.exports = {
     userValidator,
     verifyUser,
     cryptPassword,
-    verifyLogin
+    verifyLogin,
+    registerValidator
 }

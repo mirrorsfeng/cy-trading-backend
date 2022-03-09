@@ -19,6 +19,21 @@ module.exports = {
         message: '邮箱不能为空',
         result: ''
     },
+    emailCodeError: {
+        code: '11002',
+        message: '验证码错误',
+        result: '',
+    },
+    emailCodeSaveError: {
+        code: '11003',
+        message: '验证码保存错误',
+        result: '',
+    },
+    emailCodeNotExist: {
+        code: '11004',
+        message: '邮箱尚未获取验证码',
+        result: '',
+    },
     userNotExist: {
         code: '10004',
         message: '用户不存在',
@@ -72,6 +87,16 @@ module.exports = {
     invalidGoodsId: {
         code: '10205',
         message: '修改商品信息不存在',
+        result: '',
+    },
+    getTypeGoodsError: {
+        code: '10206',
+        message: '获取类型商品错误',
+        result: '',
+    },
+    typeGoodsNotExist: {
+        code: '10207',
+        message: '该商品类型不存在',
         result: '',
     }
 }

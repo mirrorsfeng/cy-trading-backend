@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
-const { emailError } = require('../constants/err.type');
+const { emailError, emailCodeSaveError } = require('../constants/err.type');
+const { saveCode } = require('../service/emailCode.service');
 
 const transporter = nodemailer.createTransport({
 //node_modules/nodemailer/lib/well-known/services.json  查看相关的配置
@@ -56,6 +57,11 @@ class sendEmailController {
             return new Promise((res,rej) => {
                  sendMail(email, code, status => {
                     if(status) {
+                        try {
+                            saveCode(email, code); 
+                        } catch (err) {
+                            ctx.app.emit('error', emailCodeSaveError, ctx);
+                        }
                         res(status);
                     }
                 });

@@ -14,6 +14,11 @@ const User = seq.define('cy_User', {
         allowNull: false,
         comment: '密码',
     },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        comment: '邮箱'
+    },
     is_admin: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -22,6 +27,6 @@ const User = seq.define('cy_User', {
     }
 });
 
-//  User.sync();
+//  User.sync({force: true});
 
  module.exports = User

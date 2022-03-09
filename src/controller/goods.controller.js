@@ -4,9 +4,11 @@ const {
     fileUploadError,
     unSupportedImgType, 
     publishGoodsError,
-    invalidGoodsId
+    invalidGoodsId,
+    getTypeGoodsError,
+    typeGoodsNotExist,
  } = require('../constants/err.type');
-const { createGoods, updateGoods } = require('../service/goods.service');
+const { createGoods, updateGoods, searchType } = require('../service/goods.service');
 class GoodsController{
     async upload(ctx, next) {
        const {file} = ctx.request.files;
@@ -58,6 +60,34 @@ class GoodsController{
         }
         
     }
+
+    async getTypeGoods(ctx) {
+       const { type } = ctx.params;
+       const num = ctx.query.num;
+        try {
+            const res = await searchType(type);
+            const value = [];
+            if(!res){
+                console.error('商品类型不存在');
+               return ctx.app.emit('error', typeGoodsNotExist, ctx);
+                
+            }
+            if(!num || num>=res.length) {
+                    res.forEach(item => {
+                        value.push(item.dataValues);
+                    });
+            }else {
+                for(let i=0; i<num; i++){
+                    value.push(res[i].dataValues);
+                }
+            }
+            ctx.body = value;
+        } catch (err) {
+            console.error('获取类型商品失败');
+            return ctx.app.emit('error', getTypeGoodsError, ctx);  
+        }
+    }
+
 }
 
 module.exports = new GoodsController();

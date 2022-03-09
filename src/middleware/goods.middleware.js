@@ -17,6 +17,7 @@ const goodsValidator = async (ctx ,next) => {
     await next();
 }
 
+
 module.exports = {
     goodsValidator
 }

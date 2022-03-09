@@ -5,10 +5,10 @@ const { userRegisterError } = require('../constants/err.type');
 const { JWT_SECRET } = require('../config/config.default');
 class UserController {
     async register(ctx, next) {
-        const { user_name, passWord } = ctx.request.body;
+        const { user_name, passWord, email } = ctx.request.body;
 
         try{
-            const res = await createUser(user_name, passWord);
+            const res = await createUser(user_name, passWord, email);
             ctx.body = {
                 code: 0,
                 message: '用户注册成功',

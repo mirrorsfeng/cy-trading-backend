@@ -11,6 +11,12 @@ class GoodsService {
 
         return res[0]>0? true : false;
     }
+
+    async searchType(type) {
+        const res = await Goods.findAll({where: {goods_type: type}});
+
+        return res
+    }
 }
 
 module.exports = new GoodsService();
