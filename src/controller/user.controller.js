@@ -63,6 +63,24 @@ class UserController {
         }
         
     }
+
+    async getUserInfo(ctx) {
+        const { authorization } = ctx.request.header;
+        const token = authorization? authorization.replace('Bearer ',''): null;
+        try {
+            const user = jwt.verify(token, JWT_SECRET);
+            ctx.body = {
+                code: 0,
+                message: '当前用户信息',
+                result: {
+                    id: user.id,
+                    user_name: user.user_name,
+                }
+            }
+        } catch (err) {
+            console.error('解析token错误:' + err);
+        }
+    }
 }
 
 module.exports = new UserController();

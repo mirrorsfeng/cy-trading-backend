@@ -2,10 +2,10 @@ const { DataTypes } = require('sequelize');
 const seq = require('../db/seq');
 
 const Goods = seq.define('cy_goods', {
-    goods_name: {
+    goods_comment: {
         type: DataTypes.STRING,
         allowNull: false,
-        comment: '商品名称',
+        comment: '商品描述',
     },
     goods_price: {
         type: DataTypes.DECIMAL(10,2),
@@ -21,6 +21,11 @@ const Goods = seq.define('cy_goods', {
         type: DataTypes.STRING,
         allowNull: false,
         comment: '商品图片url',
+    },
+    goods_userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        comment: '发布该商品的用户id'
     }
 })
 

@@ -6,6 +6,7 @@ const auth = async (ctx, next) => {
     const { authorization } = ctx.request.header;
     const token = authorization? authorization.replace('Bearer ',''): null;
     if(!token) {
+        console.error('没有携带token')
         return ctx.app.emit('error', noneToken, ctx);
     }
 

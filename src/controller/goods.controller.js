@@ -88,6 +88,9 @@ class GoodsController{
         }
     }
 
+    async getTypeAllGoods(ctx) {
+
+    }
 }
 
 module.exports = new GoodsController();
