@@ -60,7 +60,7 @@ module.exports = {
         result:''
     },
     noneToken: {
-        ccode: '10103',
+        code: '10103',
         message: '没有携带token',
         result:''
     },
@@ -97,6 +97,18 @@ module.exports = {
     typeGoodsNotExist: {
         code: '10207',
         message: '该商品类型不存在',
+        result: '',
+    },
+    getGoodsError: {
+        code: '10208',
+        message: '获取该商品失败',
+        result: '',
+    },
+
+
+    createCommentError: {
+        code: '10301',
+        message: '评论发表失败',
         result: '',
     }
 }

@@ -20,6 +20,16 @@ class UserService {
        
         return res[0]>0? true : false;
     }
+
+
+    async findUserAvator(id) {
+        const res = await User.findOne({where: { id }});
+        if(res) {
+            return res.dataValues.avator
+        }else {
+            return 0;
+        }
+    }
 }
 
 module.exports = new UserService();

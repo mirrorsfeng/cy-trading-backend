@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const User = require('./user.model');
 const seq = require('../db/seq');
 
 const Goods = seq.define('cy_goods', {
@@ -29,6 +30,10 @@ const Goods = seq.define('cy_goods', {
     }
 })
 
+ Goods.belongsTo(User, {
+     foreignKey: 'goods_userId',
+     targetKey: 'id'
+ });
 // Goods.sync({force: true});
 
 module.exports = Goods

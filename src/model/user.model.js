@@ -19,6 +19,11 @@ const User = seq.define('cy_User', {
         allowNull: false,
         comment: '邮箱'
     },
+    avator: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        comment: '用户头像',
+    },
     is_admin: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

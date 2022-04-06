@@ -1,4 +1,5 @@
 const Goods = require('../model/goods.model');
+const User = require('../model/user.model');
 
 class GoodsService {
     async createGoods(goods) {
@@ -13,9 +14,42 @@ class GoodsService {
     }
 
     async searchType(type) {
-        const res = await Goods.findAll({where: {goods_type: type}});
-
+        const res = await Goods.findAll({
+            where: {goods_type: type},
+            include: [
+                {
+                    attributes: ['avator'],
+                    model: User,
+                }
+            ]
+        });
         return res
+    }
+
+    async getGoodsById(id) {
+        const res = await Goods.findOne({
+            where: {
+                id,
+            },
+            include: [
+                {
+                    attributes: ['avator'],
+                    model: User,
+                }
+            ]
+        })
+        return res
+    }
+
+    async getBanner() {
+        console.log(22222222)
+        const res = await Goods.findAll({
+          limit: 5,
+            order:[
+                ['createdAt', 'DESC']
+            ]
+        })
+        return res;
     }
 }
 

@@ -1,4 +1,5 @@
 const path = require('path');
+const gm = require('gm').subClass({imageMagick: true});
 
 const { 
     fileUploadError,
@@ -7,16 +8,27 @@ const {
     invalidGoodsId,
     getTypeGoodsError,
     typeGoodsNotExist,
+    getGoodsError,
  } = require('../constants/err.type');
-const { createGoods, updateGoods, searchType } = require('../service/goods.service');
+const { createGoods, updateGoods, searchType, getGoodsById, getBanner } = require('../service/goods.service');
 class GoodsController{
     async upload(ctx, next) {
        const {file} = ctx.request.files;
+       const { width, height } = ctx.query;
        const fileTypes = ['image/jpeg', 'image/png']
        if(file) {
            if(!fileTypes.includes(file.type)) {
                return ctx.app.emit('error', unSupportedImgType, ctx);
            }
+           if(width || height) {
+            const h = height || width;
+         gm(file.path).resize(parseInt(width),parseInt(h),'!').write(file.path, (err) => {
+            if(err) {
+                return console.error(err);
+            }
+            return console.log('success');
+       });
+    }
            ctx.body = {
                code: 0,
                message: '商品图片上传成功',
@@ -88,8 +100,47 @@ class GoodsController{
         }
     }
 
+    async getGoods(ctx) {
+        const { id } = ctx.params;
+        try {
+            const res =  await getGoodsById(id);
+            if(!res) {
+                console.error('找不到该商品');
+                return ctx.app.emit('error', getGoodsError, ctx);
+            }
+            ctx.body = res;
+        } catch (err) {
+            console.error('找不到该商品');
+            return ctx.app.emit('error', getGoodsError, ctx);
+        }
+    }
+
     async getTypeAllGoods(ctx) {
 
+    }
+
+    async bannerImg(ctx) {
+        const res = await getBanner();
+        const imgArr = res.map((item) => {
+            const imgPath = path.join(__dirname, `../upload/${item.goods_img}`);
+            gm(imgPath).resize(600).crop(600,250,0,100).write(path.join(__dirname, `../upload/banner${item.id}.jpg`),err => {
+                if(err){
+                    console.log(err);
+                }else {
+                    console.log('success');
+                }
+            })
+            return  {
+                img:`/banner${item.id}.jpg`,
+                id: item.id,
+                type: item.goods_type,
+            }
+            // gm(imgPath).resize(600).size((err,size) => {
+            //    console.log(size)
+            //  })
+           
+        })
+        return ctx.body= imgArr 
     }
 }
 

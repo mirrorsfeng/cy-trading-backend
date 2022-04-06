@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { createUser, searchUserInfo, updateByID } = require('../service/user.service');
+const { createUser, searchUserInfo, updateByID, findUserAvator } = require('../service/user.service');
 const { userRegisterError } = require('../constants/err.type');
 
 const { JWT_SECRET } = require('../config/config.default');
@@ -69,12 +69,14 @@ class UserController {
         const token = authorization? authorization.replace('Bearer ',''): null;
         try {
             const user = jwt.verify(token, JWT_SECRET);
+            const avator = await findUserAvator(user.id);
             ctx.body = {
                 code: 0,
                 message: '当前用户信息',
                 result: {
                     id: user.id,
                     user_name: user.user_name,
+                    avator: avator,
                 }
             }
         } catch (err) {
