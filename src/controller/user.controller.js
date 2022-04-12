@@ -37,6 +37,9 @@ class UserController {
                 message: '用户登陆成功',
                 result: {
                     token: jwt.sign(res, JWT_SECRET, {expiresIn: '1d'}),
+                    id: res.id,
+                    user_name: res.user_name,
+                    avator: res.avator
                 }
             }
         } catch (error) {

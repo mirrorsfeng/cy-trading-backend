@@ -33,7 +33,7 @@ class GoodsService {
             },
             include: [
                 {
-                    attributes: ['avator'],
+                    attributes: ['avator', 'user_name'],
                     model: User,
                 }
             ]
@@ -42,7 +42,6 @@ class GoodsService {
     }
 
     async getBanner() {
-        console.log(22222222)
         const res = await Goods.findAll({
           limit: 5,
             order:[

@@ -1,6 +1,6 @@
-const { createComment } = require('../service/comment.service');
+const { createComment, getCommentById } = require('../service/comment.service');
 
-const { createCommentError } = require('../constants/err.type');
+const { createCommentError, getCommentError } = require('../constants/err.type');
 
 class CommentController {
     async uploadComment(ctx) {
@@ -13,9 +13,25 @@ class CommentController {
         }
        } catch (err) {
         console.error(err);
-        return ctx.app.emit('error', createComment, ctx);
+        return ctx.app.emit('error', createCommentError, ctx);
        }
         
+       
+    }
+
+    async getComment(ctx) {
+        const { id } = ctx.params;
+        try {
+            const res = await getCommentById(id);
+            ctx.body = {
+                code: 0,
+                message: '获取评论成功',
+                result: res,
+            }
+        } catch (err) {
+            console.error(err);
+            return ctx.app.emit('error', getCommentError, ctx);
+        }
        
     }
 }

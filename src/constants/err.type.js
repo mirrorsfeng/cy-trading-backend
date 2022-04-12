@@ -110,5 +110,34 @@ module.exports = {
         code: '10301',
         message: '评论发表失败',
         result: '',
+    },
+    getCommentError: {
+        code: '10302',
+        message: '获取评论失败',
+        result: '',
+    },
+
+
+    createColError: {
+        code: '10401',
+        message: '添加收藏失败',
+        result: '',
+    },
+    getCollectGoodsError: {
+        code: '10402',
+        message: '查找用户收藏失败',
+        result: '',
+    },
+
+
+    notFoundCollect: {
+        code: '10501',
+        message: '没有该记录',
+        result: '',
+    },
+    deleteCollectError: {
+        code: '10502',
+        message: '删除收藏错误',
+        result: '',
     }
 }
