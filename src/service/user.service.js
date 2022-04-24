@@ -30,6 +30,13 @@ class UserService {
             return 0;
         }
     }
+
+    async updateUserAvator(id,avator) {
+        const whereOpt = { id };
+        const res = await User.update({ avator }, {where : whereOpt});
+       
+        return res[0]>0? true : false;
+    }
 }
 
 module.exports = new UserService();

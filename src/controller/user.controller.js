@@ -1,5 +1,6 @@
+const path = require('path');
 const jwt = require('jsonwebtoken');
-const { createUser, searchUserInfo, updateByID, findUserAvator } = require('../service/user.service');
+const { createUser, searchUserInfo, updateByID, findUserAvator, updateUserAvator } = require('../service/user.service');
 const { userRegisterError } = require('../constants/err.type');
 
 const { JWT_SECRET } = require('../config/config.default');
@@ -84,6 +85,43 @@ class UserController {
             }
         } catch (err) {
             console.error('解析token错误:' + err);
+        }
+    }
+    async uploadUserAvator(ctx) {
+        const {file} = ctx.request.files;
+        const { id } = ctx.query;
+        const fileTypes = ['image/jpeg', 'image/png']
+        if(file) {
+            if(!fileTypes.includes(file.type)) {
+                return ctx.app.emit('error', unSupportedImgType, ctx);
+            }
+           const avator = path.basename(file.path);
+           try {
+              const res = await updateUserAvator(id, avator);
+              if(res) {
+                  ctx.body = {
+                      code: 0,
+                      message: '用户头像上传成功',
+                      result: {
+                          avator
+                      }
+                  }
+              }else {
+
+              }
+           } catch (err) {
+               console.error(err);
+                return ctx.app.emit('error',fileUploadError, ctx );
+           }
+            // ctx.body = {
+            //     code: 0,
+            //     message: '商品图片上传成功',
+            //     result: {
+            //         goods_img: path.basename(file.path),
+            //     }
+            // }
+        }else {
+             return ctx.app.emit('error',fileUploadError, ctx );
         }
     }
 }

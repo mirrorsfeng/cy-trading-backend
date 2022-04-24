@@ -139,5 +139,10 @@ module.exports = {
         code: '10502',
         message: '删除收藏错误',
         result: '',
+    },
+    getUserGoodsError: {
+        code: '10503',
+        message: '获取用户所收藏商品错误',
+        result: '',
     }
 }

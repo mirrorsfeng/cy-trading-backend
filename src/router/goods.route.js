@@ -20,4 +20,5 @@ router.get('/:type', auth, getTypeGoods);
 router.get('/detail/:id', auth, getGoods);
 //获取轮播图图片
 router.get('/banner/img', auth, bannerImg);
+
 module.exports = router;

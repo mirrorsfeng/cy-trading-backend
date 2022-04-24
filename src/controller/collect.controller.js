@@ -1,6 +1,11 @@
-const { createCollect, searchGoods, deleteCollect } = require('../service/collect.service');
+const { createCollect, searchGoods, deleteCollect, searchUserAllGoods } = require('../service/collect.service');
 
-const { createColError, getCollectGoodsError, notFoundCollect, deleteCollectError } = require('../constants/err.type');
+const { createColError, 
+        getCollectGoodsError, 
+        notFoundCollect, 
+        deleteCollectError,
+        getUserGoodsError
+     } = require('../constants/err.type');
 
 class CollectController {
     async getCollectGoods(ctx) {
@@ -55,6 +60,22 @@ class CollectController {
             console.error(err);
             return ctx.app.emit('error', deleteCollectError, ctx);
         }
+    }
+
+    async getAllGoods(ctx) {
+        try {
+            const { userId } = ctx.query;
+            const res =  await searchUserAllGoods(userId);
+            ctx.body = {
+                code: 0,
+                message: '用户收藏商品',
+                result: res
+            }
+        } catch (err) {
+            console.error(err);
+            ctx.app.emit('error', getUserGoodsError,ctx)
+        }
+       
     }
 }
 
