@@ -144,5 +144,12 @@ module.exports = {
         code: '10503',
         message: '获取用户所收藏商品错误',
         result: '',
+    },
+
+
+    getChatListError: {
+        code: '10601',
+        message: '获取聊天记录失败',
+        result: '',
     }
 }

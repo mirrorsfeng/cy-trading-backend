@@ -6,6 +6,7 @@ const { userRegisterError } = require('../constants/err.type');
 const { JWT_SECRET } = require('../config/config.default');
 class UserController {
     async register(ctx, next) {
+        //获取用户名 密码 邮箱
         const { user_name, passWord, email } = ctx.request.body;
 
         try{
@@ -74,6 +75,7 @@ class UserController {
         try {
             const user = jwt.verify(token, JWT_SECRET);
             const avator = await findUserAvator(user.id);
+            const userInfo = await searchUserInfo(user.user_name);
             ctx.body = {
                 code: 0,
                 message: '当前用户信息',
@@ -81,6 +83,7 @@ class UserController {
                     id: user.id,
                     user_name: user.user_name,
                     avator: avator,
+                    email: userInfo.email
                 }
             }
         } catch (err) {
