@@ -3,7 +3,7 @@ const Router = require('koa-router');
 const { auth } = require('../middleware/auth.middleware');
 const { goodsValidator } = require('../middleware/goods.middleware');
 
-const { upload, create, update, getTypeGoods, getTypeAllGoods, getGoods, bannerImg } = require('../controller/goods.controller');
+const { upload, create, update, getTypeGoods, deleteGoods, getGoods, bannerImg } = require('../controller/goods.controller');
 
 const router = new Router({prefix: '/goods'});
 //图片上传接口
@@ -20,5 +20,7 @@ router.get('/:type', auth, getTypeGoods);
 router.get('/detail/:id', auth, getGoods);
 //获取轮播图图片
 router.get('/banner/img', auth, bannerImg);
+//下架商品接口
+router.post('/delete', auth, deleteGoods)
 
 module.exports = router;

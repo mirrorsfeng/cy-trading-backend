@@ -1,6 +1,6 @@
 const path = require('path');
 const gm = require('gm').subClass({imageMagick: true});
-
+const Jimp = require('jimp');
 const { 
     fileUploadError,
     unSupportedImgType, 
@@ -22,12 +22,9 @@ class GoodsController{
            }
            if(width || height) {
             const h = height || width;
-         gm(file.path).resize(parseInt(width),parseInt(h),'!').write(file.path, (err) => {
-            if(err) {
-                return console.error(err);
-            }
-            return console.log('success');
-       });
+            const image = await Jimp.read(file.path);
+            await image.resize(parseInt(width),parseInt(h));
+            await image.writeAsync(file.path);
     }
            ctx.body = {
                code: 0,
@@ -115,31 +112,29 @@ class GoodsController{
         }
     }
 
-    async getTypeAllGoods(ctx) {
+    async deleteGoods(ctx) {
 
     }
 
     async bannerImg(ctx) {
         const res = await getBanner();
-        const imgArr = res.map((item) => {
-            const imgPath = path.join(__dirname, `../upload/${item.goods_img}`);
-            gm(imgPath).resize(600).crop(600,250,0,100).write(path.join(__dirname, `../upload/banner${item.id}.jpg`),err => {
-                if(err){
-                    console.log(err);
-                }else {
-                    console.log('success');
-                }
-            })
-            return  {
-                img:`/banner${item.id}.jpg`,
-                id: item.id,
-                type: item.goods_type,
-            }
-            // gm(imgPath).resize(600).size((err,size) => {
-            //    console.log(size)
-            //  })
-           
-        })
+        const imgArr = [];
+        for(let i = 0;i<res.length;i++) {
+            const im = {};
+            const imgPath = path.join(__dirname, `../upload/${res[i].goods_img}`);
+            const last = imgPath.split('.');
+            console.log(last);
+            const image = await Jimp.read(imgPath);
+            await image.resize(600,Jimp.AUTO);
+            const y = (image.bitmap.height-250)/2;
+            await image.crop(0,y,600,250);
+            await image.writeAsync(path.join(__dirname, `../upload/banner${res[i].id}.${last[1]}`));
+            im.img = `/banner${res[i].id}.${last[1]}`;
+            im.id = res[i].id;
+            im.type = res[i].goods_type
+            imgArr.push(im);
+        }
+       
         return ctx.body= imgArr 
     }
 }
