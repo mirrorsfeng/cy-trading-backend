@@ -32,17 +32,17 @@ wss.on('connection', (conn,req) => {
         }
     }
     onLineList.push(userInfo);
-    clients[connName] = conn;
-    conn.on('message', (message) => {
-        
+    clients[connName] = conn; 
+    conn.on('message', async (message) => {
         const newData = message.toString('utf-8');
         console.log(newData);
        const [content, userName] = newData.split('/');
        const toUser = findIsOnline(onLineList, userName);
+       const res = await createMessage(content, connName,userName);
        if(toUser) {
-            clients[toUser.userName].send(content);
-       }
-        createMessage(content, connName,userName);
+        clients[toUser.userName].send(`${content}-${connName}-${res.id}`);
+   }
+       
     })
     conn.on('close', () => {
         onLineList = onLineList.filter(item => {

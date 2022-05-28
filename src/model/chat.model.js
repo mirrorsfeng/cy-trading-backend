@@ -16,6 +16,12 @@ const Chat = seq.define('cy_chat', {
         type: DataTypes.STRING,
         allowNull: false,
         comment: '接收方',
+    },
+    isread: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        comment: '是否已读',
+        defaultValue: 0,
     }
 })
 // Chat.sync({force: true});

@@ -1,5 +1,6 @@
 const Goods = require('../model/goods.model');
 const User = require('../model/user.model');
+const { Op } = require("sequelize");
 
 class GoodsService {
     async createGoods(goods) {
@@ -41,6 +42,28 @@ class GoodsService {
         return res
     }
 
+    async searchLike(keywords) {
+        const res = await Goods.findAll({
+            where: {
+                [Op.or]: [{  goods_comment: {
+                    [Op.like]: `%${keywords}%`
+                    }}, {
+                        goods_type: {
+                            [Op.like]: `%${keywords}%`
+                        }
+                    }]
+              
+            },
+            include: [
+                {
+                    attributes: ['avator'],
+                    model: User,
+                }
+            ]
+        })
+        return res
+    }
+
     async getBanner() {
         const res = await Goods.findAll({
           limit: 5,
@@ -49,6 +72,30 @@ class GoodsService {
             ]
         })
         return res;
+    }
+
+    async destroyGoods(id) {
+        const res = await Goods.destroy({
+            where: {
+                id
+            }
+        })
+        return res
+    }
+
+    async searchUserGoods(goods_userId) {
+        const res = await Goods.findAll({
+            where: {
+                goods_userId
+            },
+            include: [
+                {
+                    attributes: ['avator'],
+                    model: User,
+                }
+            ]
+        })
+        return res
     }
 }
 

@@ -1,5 +1,6 @@
 const Collect = require('../model/collect.model');
 const Goods = require('../model/goods.model');
+const User = require('../model/user.model');
 const { Op } = require("sequelize");
 
 class CollectService {
@@ -37,7 +38,13 @@ class CollectService {
             const good = await Goods.findOne({
                 where: {
                     id: idRes[i].goods_id
-                }
+                },
+                include: [
+                    {
+                        attributes: ['avator'],
+                        model: User,
+                    }
+                ]
             })
             goodsRes.push(good);
         }

@@ -10,7 +10,7 @@ const {
     typeGoodsNotExist,
     getGoodsError,
  } = require('../constants/err.type');
-const { createGoods, updateGoods, searchType, getGoodsById, getBanner } = require('../service/goods.service');
+const { createGoods, updateGoods, searchType, getGoodsById, getBanner, searchLike, destroyGoods, searchUserGoods } = require('../service/goods.service');
 class GoodsController{
     async upload(ctx, next) {
        const {file} = ctx.request.files;
@@ -113,7 +113,29 @@ class GoodsController{
     }
 
     async deleteGoods(ctx) {
+        const { id } = ctx.request.body;
+        const res = await destroyGoods(id);
+        ctx.body = res;
+    }
 
+    async selectLike(ctx) {
+        const { keywords } = ctx.query;
+        const res = await searchLike(keywords);
+        ctx.body = {
+            code: 0,
+            message: '查询到的商品',
+            result: res
+        }
+    }
+
+    async getMyGoods(ctx) {
+        const { userId } = ctx.query;
+        const res = await searchUserGoods(userId);
+        ctx.body = {
+            code: 0,
+            message: '用户发布商品',
+            result: res
+        }
     }
 
     async bannerImg(ctx) {
@@ -123,7 +145,6 @@ class GoodsController{
             const im = {};
             const imgPath = path.join(__dirname, `../upload/${res[i].goods_img}`);
             const last = imgPath.split('.');
-            console.log(last);
             const image = await Jimp.read(imgPath);
             await image.resize(600,Jimp.AUTO);
             const y = (image.bitmap.height-250)/2;
